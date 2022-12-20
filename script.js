@@ -42,6 +42,7 @@ function enableCam(event) {
 }
 
 var children = [];
+var childrenData = [];
 
 function predictWebcam() {
   // Now let's start classifying a frame in the stream.
@@ -90,14 +91,20 @@ function predictWebcam() {
         children.push(highlighter);
         children.push(p);
       }
-      if (predictions[n].score > 0.95) {
-        const info = document.createElement("p");
-        info.innerText =
-          predictions[n].class +
-          " - with " +
-          Math.round(parseFloat(predictions[n].score) * 100) +
-          "% confidence.";
-        data.appendChild(info);
+      if (predictions[n].score > 0.9) {
+        const finder = childrenData.findIndex(
+          (value) => value === predictions[n].class
+        );
+        if (finder < 0) {
+          childrenData.push(predictions[n].class);
+          const info = document.createElement("p");
+          info.innerText =
+            predictions[n].class +
+            " - with " +
+            Math.round(parseFloat(predictions[n].score) * 100) +
+            "% confidence.";
+          data.appendChild(info);
+        }
       }
     }
 
